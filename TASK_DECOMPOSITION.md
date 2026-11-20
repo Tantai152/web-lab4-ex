@@ -3,7 +3,7 @@
 
 Execute each task sequentially (1 prompt = 1 task). Mark `[x]` once verified.
 
-- [ ] **Task 1: Project Scaffold (`client/package.json`, `client/vite.config.js`, `client/index.html`, `client/src/main.jsx`)**
+- [x] **Task 1 Project Scaffold (`client/package.json`, `client/vite.config.js`, `client/index.html`, `client/src/main.jsx`)**
   - Initialize minimal Vite + React 19 configuration files.
 - [ ] **Task 2: Zero-CLS Layout Styles (`client/src/index.css`)**
   - Define exact box-model dimensions, skeleton pulse animation, and card layout styles so `Skeleton` and `PersonDetail` occupy identical space (`CLS = 0`).
