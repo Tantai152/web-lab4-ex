@@ -1,0 +1,591 @@
+
+/* =========================================
+   LAB 4 - EXERCISE 1.3
+   Legacy Validation Anti-Patterns
+   ========================================= */
+
+/* 1. Base & Global Styles */
+
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: #1e293b;
+  background: #f1f5f9;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --color-primary: #2563eb;
+  --color-danger: #ef4444;
+  --color-success: #10b981;
+  --color-text: #1e293b;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* 2. Application Layout */
+
+.app-container {
+  width: 100%;
+  max-width: 1440px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 40px 32px;
+}
+
+.app-header {
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.app-header h1 {
+  margin: 0 0 12px;
+  color: #0f172a;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.app-header p {
+  max-width: 760px;
+  margin: 0 auto;
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.app-header .subtitle {
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 32px;
+}
+
+/* 3. Comparison Cards */
+
+.form-card {
+  position: relative;
+  min-width: 0;
+  padding: 28px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.form-card:hover {
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+}
+
+.form-card.legacy {
+  border: 1px solid #fecaca;
+  border-top: 4px solid var(--color-danger);
+}
+
+.form-card.refactored {
+  border: 1px solid #a7f3d0;
+  border-top: 4px solid var(--color-success);
+}
+
+.form-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.form-card-title {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.35rem;
+  font-weight: 750;
+}
+
+.form-card-description {
+  margin: 8px 0 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Architecture Badges */
+
+.architecture-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 750;
+  line-height: 1.3;
+  white-space: normal;
+}
+
+.form-card.legacy .architecture-badge {
+  color: #b91c1c;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+.form-card.refactored .architecture-badge {
+  color: #047857;
+  background: #d1fae5;
+  border: 1px solid #a7f3d0;
+}
+
+/* 4. Form Elements */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  color: #334155;
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.form-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 14px;
+  color: #0f172a;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.9rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: #94a3b8;
+}
+
+.form-input:hover {
+  border-color: #94a3b8;
+}
+
+.form-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.form-input.has-error {
+  border-color: var(--color-danger);
+  background: #fffafa;
+}
+
+.form-input.has-error:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.error-text {
+  display: block;
+  margin-top: 2px;
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.success-text {
+  display: block;
+  color: #059669;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* 5. Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 650;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.btn-submit {
+  width: 100%;
+  margin-top: 8px;
+  color: #ffffff;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
+
+.form-card.legacy .btn-submit {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.form-card.legacy .btn-submit:hover:not(:disabled) {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* 6. Render Counter */
+
+.render-counter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 36px;
+  padding: 6px 10px;
+  color: #1d4ed8;
+  background: #dbeafe;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.form-card.legacy .render-counter-badge {
+  color: #b91c1c;
+  background: #fee2e2;
+  border-color: #fecaca;
+}
+
+.form-card.refactored .render-counter-badge {
+  color: #047857;
+  background: #d1fae5;
+  border-color: #a7f3d0;
+}
+
+/* 7. Form Status */
+
+.form-status {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.form-status.error {
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.form-status.success {
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.form-status.info {
+  color: #1e40af;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+/* 8. Execution Trace Terminal */
+
+.trace-section {
+  margin-top: 36px;
+}
+
+.trace-section h2 {
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-size: 1.35rem;
+  font-weight: 750;
+}
+
+.trace-section-description {
+  margin: 0 0 16px;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.trace-terminal {
+  width: 100%;
+  min-height: 260px;
+  max-height: 480px;
+  overflow: hidden;
+  color: #e2e8f0;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15);
+}
+
+/* macOS-style Terminal Header */
+
+.trace-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 16px;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+.terminal-dot {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.terminal-dot.red {
+  background: #ff5f57;
+}
+
+.terminal-dot.yellow {
+  background: #febc2e;
+}
+
+.terminal-dot.green {
+  background: #28c840;
+}
+
+.trace-terminal-title {
+  flex: 1;
+  margin-left: 8px;
+  color: #94a3b8;
+  font-family: monospace;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+/* Terminal Content */
+
+.trace-terminal-content {
+  min-height: 220px;
+  max-height: 420px;
+  padding: 18px;
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-color: #475569 #0f172a;
+  scrollbar-width: thin;
+}
+
+.trace-terminal-content::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.trace-terminal-content::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.trace-terminal-content::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 8px;
+}
+
+.trace-line {
+  display: block;
+  margin-bottom: 8px;
+  color: #e2e8f0;
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* Effect Logs - Amber/Yellow */
+
+.trace-line.effect {
+  color: #facc15;
+}
+
+/* Render Logs - Cyan */
+
+.trace-line.render {
+  color: #22d3ee;
+}
+
+/* Cascade Alerts - Red/Bold */
+
+.trace-line.alert {
+  color: #f87171;
+  font-weight: 800;
+}
+
+/* Informational Logs */
+
+.trace-line.info {
+  color: #94a3b8;
+}
+
+.trace-line.success {
+  color: #4ade80;
+}
+
+.trace-line.warning {
+  color: #fb923c;
+}
+
+/* Exact Cascade Detection Highlight */
+
+.trace-line.alert.cascade-detected {
+  margin: 12px 0;
+  padding: 12px;
+  color: #fca5a5;
+  background: rgba(127, 29, 29, 0.25);
+  border-left: 3px solid #ef4444;
+  border-radius: 4px;
+  font-weight: 800;
+}
+
+/* Race Condition Warning */
+
+.trace-line.alert.race-condition {
+  color: #f87171;
+  font-weight: 750;
+}
+
+/* 9. Responsive Layout */
+
+@media (max-width: 900px) {
+  .app-container {
+    padding: 32px 20px;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .form-card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 24px 14px;
+  }
+
+  .app-header {
+    margin-bottom: 24px;
+  }
+
+  .app-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .app-header p {
+    font-size: 0.875rem;
+  }
+
+  .form-card {
+    padding: 18px;
+  }
+
+  .form-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-card-title {
+    font-size: 1.2rem;
+  }
+
+  .trace-terminal-content {
+    padding: 12px;
+  }
+
+  .trace-line {
+    font-size: 0.7rem;
+  }
+}
+
+/* 10. Accessibility & Motion Preferences */
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
